@@ -1,0 +1,323 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Schienbein Trainingsplan</title>
+<meta name="description" content="Übungsplan gegen Schienbeinschmerzen innen bei nach innen knickenden Sprunggelenken. Mit Steigerung, Wochenprotokoll und PDF.">
+<meta name="theme-color" content="#b5452c">
+<meta property="og:title" content="Schienbein Trainingsplan">
+<meta property="og:description" content="15 Minuten Übungen gegen Shin Splits, 4 bis 5 Mal pro Woche.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23b5452c'/%3E%3Cpath d='M9 24h14M12 24c0-6 2-10 2-16M18 8c0 6 2 10 2 16' stroke='white' stroke-width='3' fill='none' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Source+Sans+3:wght@400;600;700&display=swap">
+<style>
+:root {
+  --bg: #f6f7f8;
+  --surface: #ffffff;
+  --fg: #1c2226;
+  --muted: #5d676e;
+  --line: #dde2e5;
+  --accent: #b5452c;
+  --accent-soft: #f6e6e1;
+  --ok: #3f7a4f;
+  --warn: #a8641a;
+  --font-display: "Barlow Condensed", "Arial Narrow", Arial, sans-serif;
+  --font-body: "Source Sans 3", "Segoe UI", Helvetica, Arial, sans-serif;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #14181b; --surface: #1c2125; --fg: #e8ecee; --muted: #9aa5ac; --line: #2e353a;
+    --accent: #e0745a; --accent-soft: #3a2621; --ok: #7cbf8c; --warn: #e0a35a; color-scheme: dark;
+  }
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--bg); color: var(--fg);
+  font-family: var(--font-body); font-size: 16px; line-height: 1.5;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: max(32px, env(safe-area-inset-top, 0px)) max(48px, env(safe-area-inset-bottom, 0px));
+}
+.wrap { max-width: 760px; margin: 0 auto; display: flex; flex-direction: column; gap: 28px; }
+h1, h2, h3 { font-family: var(--font-display); font-weight: 700; text-wrap: balance; margin: 0; letter-spacing: 0.01em; }
+h1 { font-size: clamp(2.2rem, 7vw, 3.2rem); line-height: 1; text-transform: uppercase; }
+h2 { font-size: 1.6rem; line-height: 1.1; text-transform: uppercase; }
+h3 { font-size: 1.2rem; font-weight: 600; }
+p { margin: 0; }
+.eyebrow { font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; color: var(--accent); }
+header { display: flex; flex-direction: column; gap: 10px; border-bottom: 3px solid var(--fg); padding-bottom: 20px; }
+.lead { color: var(--muted); max-width: 62ch; }
+.meta { display: flex; flex-wrap: wrap; gap: 8px 20px; font-size: 0.92rem; }
+.actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 6px; }
+.btn {
+  font: inherit; font-weight: 700; font-size: 0.92rem; cursor: pointer; text-decoration: none;
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 8px 14px; border-radius: 6px; border: 2px solid var(--accent);
+  background: var(--accent); color: #fff;
+}
+.btn.ghost { background: transparent; color: var(--accent); }
+[hidden] { display: none !important; }
+.hint { font-size: 0.85rem; color: var(--muted); }
+.btn:hover { filter: brightness(1.08); }
+.btn:focus-visible, input:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+
+.block { display: flex; flex-direction: column; gap: 12px; break-inside: avoid; }
+.block-head { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+.block-num { font-family: var(--font-display); font-size: 1.6rem; color: var(--accent); font-weight: 700; }
+.block-time { margin-left: auto; font-size: 0.85rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+.ex-list { list-style: none; margin: 0; padding: 0; background: var(--surface); border: 1px solid var(--line); border-radius: 6px; }
+.ex { display: grid; grid-template-columns: 1fr auto; gap: 4px 16px; padding: 14px 16px; border-top: 1px solid var(--line); break-inside: avoid; }
+.ex:first-child { border-top: 0; }
+.ex-body { min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+.ex-body p { color: var(--muted); font-size: 0.95rem; }
+.dose { font-variant-numeric: tabular-nums; font-weight: 700; white-space: nowrap; align-self: start; background: var(--accent-soft); color: var(--accent); padding: 2px 8px; border-radius: 4px; font-size: 0.9rem; }
+.tag { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--accent); }
+
+table { width: 100%; border-collapse: collapse; font-size: 0.95rem; }
+.table-wrap { overflow-x: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 6px; }
+th, td { text-align: left; padding: 10px 14px; border-top: 1px solid var(--line); vertical-align: middle; }
+thead th { border-top: 0; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); }
+td:first-child { font-weight: 700; white-space: nowrap; }
+
+.tracker th, .tracker td { text-align: center; padding: 8px 6px; }
+.tracker td:first-child, .tracker th:first-child { text-align: left; padding-left: 14px; }
+.tracker input[type="checkbox"] { width: 20px; height: 20px; accent-color: var(--accent); cursor: pointer; margin: 0; }
+.tracker input[type="number"] {
+  width: 3.2em; font: inherit; font-variant-numeric: tabular-nums; text-align: center;
+  padding: 2px 4px; border: 1.5px solid var(--line); border-radius: 4px; background: var(--bg); color: var(--fg);
+}
+.tracker input[type="number"]::-webkit-inner-spin-button,
+.tracker input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+.tracker input[type="number"] { -moz-appearance: textfield; appearance: textfield; }
+.tracker td:last-child { white-space: nowrap; }
+@media (max-width: 480px) {
+  .tracker th, .tracker td { padding: 8px 3px; }
+  .tracker td:first-child, .tracker th:first-child { padding-left: 10px; }
+  .tracker th:last-child, .tracker td:last-child { padding-right: 10px; }
+  .tracker input[type="checkbox"] { width: 22px; height: 22px; }
+  .tracker input[type="number"] { width: 2.4em; }
+  .tracker .long { display: none; }
+}
+@media (min-width: 481px) { .tracker .short { display: none; } }
+.tracker-foot { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; font-size: 0.85rem; color: var(--muted); }
+.link-btn { font: inherit; background: none; border: 0; color: var(--accent); cursor: pointer; text-decoration: underline; padding: 0; }
+
+.scale { display: grid; grid-template-columns: repeat(11, 1fr); gap: 3px; font-variant-numeric: tabular-nums; font-size: 0.85rem; text-align: center; font-weight: 700; }
+.scale span { padding: 6px 0; border-radius: 3px; color: var(--fg); }
+.scale .g { background: color-mix(in srgb, var(--ok) 28%, transparent); }
+.scale .y { background: color-mix(in srgb, var(--warn) 30%, transparent); }
+.scale .r { background: color-mix(in srgb, var(--accent) 30%, transparent); }
+.scale-legend { display: flex; justify-content: space-between; font-size: 0.85rem; color: var(--muted); gap: 12px; }
+
+.rules { margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 6px; }
+.alert { border: 2px solid var(--accent); border-radius: 6px; padding: 16px; display: flex; flex-direction: column; gap: 8px; background: var(--surface); break-inside: avoid; }
+footer { font-size: 0.85rem; color: var(--muted); border-top: 1px solid var(--line); padding-top: 14px; }
+
+@media (max-width: 480px) {
+  .ex { grid-template-columns: 1fr; }
+  .dose { justify-self: start; }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+@media print {
+  :root {
+    --bg: #ffffff; --surface: #ffffff; --fg: #111111; --muted: #444444; --line: #cccccc;
+    --accent: #a23c25; --accent-soft: #f3e2dd; color-scheme: light;
+  }
+  @page { size: A4; margin: 12mm; }
+  body { padding: 0; font-size: 10pt; }
+  .wrap { gap: 16px; max-width: none; }
+  .no-print { display: none !important; }
+  .tracker input[type="number"] { border-color: #999; }
+  * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}
+</style>
+</head>
+<body>
+<main class="wrap">
+  <header>
+    <span class="eyebrow">Shin Splits innen · Sprunggelenk knickt nach innen</span>
+    <h1>Schienbein Trainingsplan</h1>
+    <p class="lead">Kräftigt Fuß, Wade und Hüfte, damit das Sprunggelenk beim Laufen stabil bleibt und die Innenseite vom Schienbein weniger Zug abbekommt.</p>
+    <div class="meta">
+      <span><b>Dauer</b> ca. 15 Minuten</span>
+      <span><b>Häufigkeit</b> 4 bis 5 Mal pro Woche</span>
+      <span><b>Material</b> Stufe, kurzes Loop Band, kleiner Ball oder Handtuch</span>
+    </div>
+    <div class="actions no-print">
+      <button class="btn" type="button" id="print-btn">Als PDF speichern</button>
+      <a class="btn ghost" href="Schienbein_Trainingsplan.pdf" download id="pdf-link" hidden>PDF herunterladen</a>
+    </div>
+    <p class="hint no-print">Im Druckfenster als Ziel „Als PDF speichern“ wählen.</p>
+  </header>
+
+  <section class="block">
+    <div class="block-head"><span class="block-num">1</span><h2>Fuß aktivieren</h2><span class="block-time">3 min</span></div>
+    <ul class="ex-list">
+      <li class="ex"><div class="ex-body"><h3>Kurzfuß</h3><p>Barfuß stehen. Fußballen Richtung Ferse ziehen, ohne die Zehen zu krallen. Das Gewölbe hebt sich.</p></div><span class="dose">10 × 5 s je Fuß</span></li>
+      <li class="ex"><div class="ex-body"><h3>Fußspitze anziehen</h3><p>Sitzen, Band um beide Vorfüße. Ein Fuß bleibt liegen, der andere zieht die Fußspitze Richtung Schienbein.</p></div><span class="dose">15 je Seite</span></li>
+    </ul>
+  </section>
+
+  <section class="block">
+    <div class="block-head"><span class="block-num">2</span><h2>Sprunggelenk mit Band</h2><span class="block-time">4 min</span></div>
+    <ul class="ex-list">
+      <li class="ex"><div class="ex-body"><span class="tag">Wichtigste Übung</span><h3>Fuß nach innen drehen</h3><p>Sitzen, Beine gestreckt, an den Knöcheln kreuzen. Band um die Vorfüße und die Vorfüße auseinanderdrücken. Langsam zurück.</p></div><span class="dose">2 × 15</span></li>
+      <li class="ex"><div class="ex-body"><h3>Fuß nach außen drehen</h3><p>Füße nebeneinander, Band um die Vorfüße. Beide Füße nach außen drehen.</p></div><span class="dose">2 × 15</span></li>
+    </ul>
+  </section>
+
+  <section class="block">
+    <div class="block-head"><span class="block-num">3</span><h2>Wade kräftigen</h2><span class="block-time">4 min</span></div>
+    <ul class="ex-list">
+      <li class="ex"><div class="ex-body"><h3>Wadenheben gestreckt</h3><p>Auf der Stufe hoch auf die Zehen, dann 3 Sekunden langsam runter.</p></div><span class="dose">2 × 15</span></li>
+      <li class="ex"><div class="ex-body"><h3>Wadenheben gebeugt</h3><p>Knie leicht gebeugt, sonst gleich. Trainiert den tiefen Wadenmuskel.</p></div><span class="dose">2 × 15</span></li>
+      <li class="ex"><div class="ex-body"><h3>Wadenheben mit Ball</h3><p>Ball oder Handtuch zwischen die Fersen klemmen. So kippen die Sprunggelenke nicht nach innen.</p></div><span class="dose">15</span></li>
+    </ul>
+  </section>
+
+  <section class="block">
+    <div class="block-head"><span class="block-num">4</span><h2>Stabilität und Hüfte</h2><span class="block-time">4 min</span></div>
+    <ul class="ex-list">
+      <li class="ex"><div class="ex-body"><h3>Einbeinstand</h3><p>Gewölbe aktiv wie beim Kurzfuß. Das Knie zeigt nach vorne, nicht nach innen.</p></div><span class="dose">2 × 30 s je Seite</span></li>
+      <li class="ex"><div class="ex-body"><h3>Seitwärts gehen</h3><p>Band an den Knöcheln, leicht in die Knie. Kleine Schritte, Knie bleiben über den Füßen.</p></div><span class="dose">2 × 10 Schritte je Richtung</span></li>
+      <li class="ex"><div class="ex-body"><h3>Seitstütz</h3><p>Auf dem Unterarm, Körper in einer Linie. Kräftigt die Hüfte, die das Knie stabil hält.</p></div><span class="dose">30 s je Seite</span></li>
+    </ul>
+  </section>
+
+  <section class="block">
+    <h2>Steigerung</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Zeitraum</th><th>Was sich ändert</th></tr></thead>
+        <tbody>
+          <tr><td>Woche 1 bis 2</td><td>Plan wie oben beschrieben.</td></tr>
+          <tr><td>Woche 3 bis 4</td><td>Wadenheben einbeinig. Einbeinstand mit geschlossenen Augen.</td></tr>
+          <tr><td>Ab Woche 5</td><td>Stärkeres Band. Wadenheben einbeinig 3 × 15. Einbeinstand auf einem Kissen.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="lead">Wenn 15 Wiederholungen leicht fallen, nimm ein stärkeres Band. Das langsame Zurückgehen ist bei jeder Übung wichtig.</p>
+  </section>
+
+  <section class="block">
+    <h2>Wochenprotokoll</h2>
+    <div class="table-wrap">
+      <table class="tracker">
+        <thead><tr><th><span class="long">Woche</span><span class="short">Wo</span></th><th>Mo</th><th>Di</th><th>Mi</th><th>Do</th><th>Fr</th><th>Sa</th><th>So</th><th><span class="long">Schmerz</span><span class="short">Schm.</span></th></tr></thead>
+        <tbody id="tracker-body"></tbody>
+      </table>
+    </div>
+    <div class="tracker-foot no-print">
+      <span>Häkchen und Schmerzwert werden nur in diesem Browser gespeichert.</span>
+      <button class="link-btn" type="button" id="reset-btn">Protokoll leeren</button>
+    </div>
+  </section>
+
+  <section class="block">
+    <h2>Laufen nebenbei</h2>
+    <div class="scale" aria-label="Schmerzskala 0 bis 10">
+      <span class="g">0</span><span class="g">1</span><span class="g">2</span><span class="g">3</span><span class="y">4</span><span class="y">5</span><span class="r">6</span><span class="r">7</span><span class="r">8</span><span class="r">9</span><span class="r">10</span>
+    </div>
+    <div class="scale-legend"><span>0 bis 3 ok</span><span>4 bis 5 Pause einlegen</span><span>ab 6 abbrechen</span></div>
+    <ul class="rules">
+      <li>Umfang und Tempo erst mal reduzieren.</li>
+      <li>Schmerz beim Laufen höchstens 3 von 10. Am nächsten Tag nicht schlimmer als vorher.</li>
+      <li>Danach den Wochenumfang um höchstens 10 Prozent steigern.</li>
+      <li>Laufschuhe im Fachgeschäft mit Laufanalyse prüfen lassen.</li>
+    </ul>
+  </section>
+
+  <section class="alert">
+    <h2>Zum Arzt, wenn</h2>
+    <ul class="rules">
+      <li>der Schmerz punktgenau an einer kleinen Stelle sitzt.</li>
+      <li>es auch in Ruhe oder nachts weh tut.</li>
+      <li>es nach 3 bis 4 Wochen nicht besser wird.</li>
+    </ul>
+    <p>Dann sollte eine Stressfraktur ausgeschlossen werden.</p>
+  </section>
+
+  <footer>Dieser Plan ersetzt keine ärztliche oder physiotherapeutische Untersuchung.</footer>
+</main>
+
+<script>
+(function () {
+  var KEY = "schienbein-protokoll-v1";
+  var WEEKS = 6;
+  var DAYS = ["Mo", "Di", "Mi", "Do", "Fr", "Sa", "So"];
+  var body = document.getElementById("tracker-body");
+
+  function load() {
+    try { return JSON.parse(localStorage.getItem(KEY)) || {}; } catch (e) { return {}; }
+  }
+  function save(data) {
+    try { localStorage.setItem(KEY, JSON.stringify(data)); } catch (e) {}
+  }
+
+  var data = load();
+
+  for (var w = 1; w <= WEEKS; w++) {
+    var tr = document.createElement("tr");
+    var th = document.createElement("td");
+    th.textContent = w;
+    tr.appendChild(th);
+    DAYS.forEach(function (d) {
+      var td = document.createElement("td");
+      var cb = document.createElement("input");
+      cb.type = "checkbox";
+      cb.id = "w" + w + "-" + d;
+      cb.setAttribute("aria-label", "Woche " + w + ", " + d);
+      cb.checked = !!data[cb.id];
+      td.appendChild(cb);
+      tr.appendChild(td);
+    });
+    var tdp = document.createElement("td");
+    var num = document.createElement("input");
+    num.type = "number"; num.min = "0"; num.max = "10"; num.inputMode = "numeric";
+    num.id = "w" + w + "-schmerz";
+    num.setAttribute("aria-label", "Schmerzwert Woche " + w);
+    if (data[num.id] !== undefined) num.value = data[num.id];
+    tdp.appendChild(num);
+    tdp.appendChild(document.createTextNode(" /10"));
+    tr.appendChild(tdp);
+    body.appendChild(tr);
+  }
+
+  body.addEventListener("change", function (e) {
+    var t = e.target;
+    if (t.type === "checkbox") {
+      if (t.checked) data[t.id] = true; else delete data[t.id];
+    } else if (t.type === "number") {
+      var v = parseInt(t.value, 10);
+      if (isNaN(v)) { delete data[t.id]; t.value = ""; }
+      else { v = Math.max(0, Math.min(10, v)); t.value = v; data[t.id] = v; }
+    }
+    save(data);
+  });
+
+  document.getElementById("reset-btn").addEventListener("click", function () {
+    if (!confirm("Alle Häkchen und Schmerzwerte löschen?")) return;
+    data = {};
+    save(data);
+    body.querySelectorAll("input").forEach(function (i) {
+      if (i.type === "checkbox") i.checked = false; else i.value = "";
+    });
+  });
+
+  document.getElementById("print-btn").addEventListener("click", function () { window.print(); });
+
+  var pdf = document.getElementById("pdf-link");
+  if (location.protocol.indexOf("http") === 0 && window.fetch) {
+    fetch(pdf.getAttribute("href"), { method: "HEAD" })
+      .then(function (r) { if (r.ok) pdf.hidden = false; })
+      .catch(function () {});
+  }
+})();
+</script>
+</body>
+</html>
