@@ -4,15 +4,23 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Schienbein Trainingsplan</title>
-<meta name="description" content="Übungsplan gegen Schienbeinschmerzen innen bei nach innen knickenden Sprunggelenken. Mit Steigerung, Wochenprotokoll und PDF.">
-<meta name="theme-color" content="#b5452c">
+<meta name="description" content="Übungsplan gegen Schienbeinschmerzen innen bei nach innen knickenden Sprunggelenken. Mit geführtem Training, Steigerung und Wochenprotokoll.">
+<meta name="theme-color" content="#b5452c" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#1c2125" media="(prefers-color-scheme: dark)">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Schienbein">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta property="og:title" content="Schienbein Trainingsplan">
-<meta property="og:description" content="15 Minuten Übungen gegen Shin Splits, 4 bis 5 Mal pro Woche.">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23b5452c'/%3E%3Cpath d='M9 24h14M12 24c0-6 2-10 2-16M18 8c0 6 2 10 2 16' stroke='white' stroke-width='3' fill='none' stroke-linecap='round'/%3E%3C/svg%3E">
+<meta property="og:description" content="15 Minuten Übungen gegen Shin Splits, Schritt für Schritt geführt.">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Source+Sans+3:wght@400;600;700&display=swap">
 <style>
+/* Layout: Übersicht als ruhige Spalte. Geführtes Training als Vollbild mit wischbaren Karten, Fortschritt oben, Daumen Navigation unten. */
 :root {
   --bg: #f6f7f8;
   --surface: #ffffff;
@@ -21,6 +29,7 @@
   --line: #dde2e5;
   --accent: #b5452c;
   --accent-soft: #f6e6e1;
+  --on-accent: #ffffff;
   --ok: #3f7a4f;
   --warn: #a8641a;
   --font-display: "Barlow Condensed", "Arial Narrow", Arial, sans-serif;
@@ -30,82 +39,91 @@
 @media (prefers-color-scheme: dark) {
   :root {
     --bg: #14181b; --surface: #1c2125; --fg: #e8ecee; --muted: #9aa5ac; --line: #2e353a;
-    --accent: #e0745a; --accent-soft: #3a2621; --ok: #7cbf8c; --warn: #e0a35a; color-scheme: dark;
+    --accent: #e0745a; --accent-soft: #3a2621; --on-accent: #1a0f0b; --ok: #7cbf8c; --warn: #e0a35a; color-scheme: dark;
   }
 }
 * { box-sizing: border-box; }
-html { -webkit-text-size-adjust: 100%; }
+html { -webkit-text-size-adjust: 100%; -webkit-tap-highlight-color: transparent; }
+html.tr-open, html.tr-open body { overflow: hidden; }
 body {
   margin: 0;
   background: var(--bg); color: var(--fg);
   font-family: var(--font-body); font-size: 16px; line-height: 1.5;
   padding-left: max(16px, env(safe-area-inset-left, 0px));
   padding-right: max(16px, env(safe-area-inset-right, 0px));
-  padding-block: max(32px, env(safe-area-inset-top, 0px)) max(48px, env(safe-area-inset-bottom, 0px));
+  padding-top: max(32px, env(safe-area-inset-top, 0px));
+  padding-bottom: max(48px, env(safe-area-inset-bottom, 0px));
 }
+[hidden] { display: none !important; }
 .wrap { max-width: 760px; margin: 0 auto; display: flex; flex-direction: column; gap: 28px; }
+.stack { display: flex; flex-direction: column; gap: 28px; }
 h1, h2, h3 { font-family: var(--font-display); font-weight: 700; text-wrap: balance; margin: 0; letter-spacing: 0.01em; }
 h1 { font-size: clamp(2.2rem, 7vw, 3.2rem); line-height: 1; text-transform: uppercase; }
 h2 { font-size: 1.6rem; line-height: 1.1; text-transform: uppercase; }
-h3 { font-size: 1.2rem; font-weight: 600; }
 p { margin: 0; }
 .eyebrow { font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; color: var(--accent); }
 header { display: flex; flex-direction: column; gap: 10px; border-bottom: 3px solid var(--fg); padding-bottom: 20px; }
 .lead { color: var(--muted); max-width: 62ch; }
 .meta { display: flex; flex-wrap: wrap; gap: 8px 20px; font-size: 0.92rem; }
 .actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 6px; }
+.hint { font-size: 0.85rem; color: var(--muted); }
+
 .btn {
-  font: inherit; font-weight: 700; font-size: 0.92rem; cursor: pointer; text-decoration: none;
-  display: inline-flex; align-items: center; gap: 8px;
-  padding: 8px 14px; border-radius: 6px; border: 2px solid var(--accent);
-  background: var(--accent); color: #fff;
+  font: inherit; font-weight: 700; font-size: 0.95rem; cursor: pointer; text-decoration: none;
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  min-height: 44px; padding: 8px 16px; border-radius: 8px; border: 2px solid var(--accent);
+  background: var(--accent); color: var(--on-accent); touch-action: manipulation;
 }
 .btn.ghost { background: transparent; color: var(--accent); }
-[hidden] { display: none !important; }
-.hint { font-size: 0.85rem; color: var(--muted); }
-.btn:hover { filter: brightness(1.08); }
-.btn:focus-visible, input:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.btn:disabled { opacity: 0.35; cursor: default; }
+.btn:not(:disabled):active { transform: translateY(1px); }
+button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.link-btn { font: inherit; background: none; border: 0; color: var(--accent); cursor: pointer; text-decoration: underline; padding: 6px 0; }
 
+/* Übersicht */
 .block { display: flex; flex-direction: column; gap: 12px; break-inside: avoid; }
 .block-head { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
 .block-num { font-family: var(--font-display); font-size: 1.6rem; color: var(--accent); font-weight: 700; }
 .block-time { margin-left: auto; font-size: 0.85rem; color: var(--muted); font-variant-numeric: tabular-nums; }
-.ex-list { list-style: none; margin: 0; padding: 0; background: var(--surface); border: 1px solid var(--line); border-radius: 6px; }
-.ex { display: grid; grid-template-columns: 1fr auto; gap: 4px 16px; padding: 14px 16px; border-top: 1px solid var(--line); break-inside: avoid; }
-.ex:first-child { border-top: 0; }
+.ex-list { list-style: none; margin: 0; padding: 0; background: var(--surface); border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+.ex-list li + li { border-top: 1px solid var(--line); }
+.ex { display: grid; grid-template-columns: 1fr auto; gap: 4px 16px; padding: 14px 16px; color: inherit; text-decoration: none; break-inside: avoid; }
+.ex:hover { background: color-mix(in srgb, var(--accent-soft) 45%, transparent); }
 .ex-body { min-width: 0; display: flex; flex-direction: column; gap: 4px; }
-.ex-body p { color: var(--muted); font-size: 0.95rem; }
-.dose { font-variant-numeric: tabular-nums; font-weight: 700; white-space: nowrap; align-self: start; background: var(--accent-soft); color: var(--accent); padding: 2px 8px; border-radius: 4px; font-size: 0.9rem; }
+.ex-title { font-family: var(--font-display); font-size: 1.2rem; font-weight: 600; line-height: 1.2; }
+.ex-text { color: var(--muted); font-size: 0.95rem; }
+.ex-side { display: flex; align-items: center; gap: 10px; align-self: start; }
+.ex-go { font-size: 1.5rem; line-height: 1; color: var(--muted); }
+.dose { font-variant-numeric: tabular-nums; font-weight: 700; white-space: nowrap; background: var(--accent-soft); color: var(--accent); padding: 2px 8px; border-radius: 4px; font-size: 0.9rem; }
 .tag { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--accent); }
 
 table { width: 100%; border-collapse: collapse; font-size: 0.95rem; }
-.table-wrap { overflow-x: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 6px; }
+.table-wrap { overflow-x: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 8px; }
 th, td { text-align: left; padding: 10px 14px; border-top: 1px solid var(--line); vertical-align: middle; }
 thead th { border-top: 0; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); }
 td:first-child { font-weight: 700; white-space: nowrap; }
+tr.now td { background: var(--accent-soft); }
+tr.now td:first-child { color: var(--accent); }
 
-.tracker th, .tracker td { text-align: center; padding: 8px 6px; }
+.tracker th, .tracker td { text-align: center; padding: 4px 2px; }
 .tracker td:first-child, .tracker th:first-child { text-align: left; padding-left: 14px; }
-.tracker input[type="checkbox"] { width: 20px; height: 20px; accent-color: var(--accent); cursor: pointer; margin: 0; }
+.tracker th:last-child, .tracker td:last-child { padding-right: 12px; white-space: nowrap; }
+.cell { display: flex; align-items: center; justify-content: center; min-width: 36px; min-height: 40px; cursor: pointer; }
+.tracker input[type="checkbox"] { width: 22px; height: 22px; accent-color: var(--accent); cursor: pointer; margin: 0; }
 .tracker input[type="number"] {
-  width: 3.2em; font: inherit; font-variant-numeric: tabular-nums; text-align: center;
-  padding: 2px 4px; border: 1.5px solid var(--line); border-radius: 4px; background: var(--bg); color: var(--fg);
+  width: 2.6em; font: inherit; font-variant-numeric: tabular-nums; text-align: center; min-height: 34px;
+  padding: 2px 4px; border: 1.5px solid var(--line); border-radius: 6px; background: var(--bg); color: var(--fg);
+  -moz-appearance: textfield; appearance: textfield;
 }
 .tracker input[type="number"]::-webkit-inner-spin-button,
 .tracker input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
-.tracker input[type="number"] { -moz-appearance: textfield; appearance: textfield; }
-.tracker td:last-child { white-space: nowrap; }
+.tracker-foot { display: flex; justify-content: space-between; align-items: center; gap: 4px 12px; flex-wrap: wrap; font-size: 0.85rem; color: var(--muted); }
 @media (max-width: 480px) {
-  .tracker th, .tracker td { padding: 8px 3px; }
+  .cell { min-width: 30px; }
   .tracker td:first-child, .tracker th:first-child { padding-left: 10px; }
-  .tracker th:last-child, .tracker td:last-child { padding-right: 10px; }
-  .tracker input[type="checkbox"] { width: 22px; height: 22px; }
-  .tracker input[type="number"] { width: 2.4em; }
   .tracker .long { display: none; }
 }
 @media (min-width: 481px) { .tracker .short { display: none; } }
-.tracker-foot { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; font-size: 0.85rem; color: var(--muted); }
-.link-btn { font: inherit; background: none; border: 0; color: var(--accent); cursor: pointer; text-decoration: underline; padding: 0; }
 
 .scale { display: grid; grid-template-columns: repeat(11, 1fr); gap: 3px; font-variant-numeric: tabular-nums; font-size: 0.85rem; text-align: center; font-weight: 700; }
 .scale span { padding: 6px 0; border-radius: 3px; color: var(--fg); }
@@ -113,16 +131,141 @@ td:first-child { font-weight: 700; white-space: nowrap; }
 .scale .y { background: color-mix(in srgb, var(--warn) 30%, transparent); }
 .scale .r { background: color-mix(in srgb, var(--accent) 30%, transparent); }
 .scale-legend { display: flex; justify-content: space-between; font-size: 0.85rem; color: var(--muted); gap: 12px; }
-
 .rules { margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 6px; }
-.alert { border: 2px solid var(--accent); border-radius: 6px; padding: 16px; display: flex; flex-direction: column; gap: 8px; background: var(--surface); break-inside: avoid; }
+.alert { border: 2px solid var(--accent); border-radius: 8px; padding: 16px; display: flex; flex-direction: column; gap: 8px; background: var(--surface); break-inside: avoid; }
 footer { font-size: 0.85rem; color: var(--muted); border-top: 1px solid var(--line); padding-top: 14px; }
 
-@media (max-width: 480px) {
-  .ex { grid-template-columns: 1fr; }
-  .dose { justify-self: start; }
+/* Startleiste unten am Handy */
+.cta-bar { display: none; }
+@media (max-width: 720px) {
+  body { padding-bottom: calc(100px + env(safe-area-inset-bottom, 0px)); }
+  .cta-bar {
+    display: block; position: fixed; left: 0; right: 0; bottom: 0; z-index: 50;
+    padding: 10px max(16px, env(safe-area-inset-right, 0px)) calc(10px + env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px));
+    background: color-mix(in srgb, var(--surface) 92%, transparent);
+    -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+    border-top: 1px solid var(--line);
+  }
+  .cta-bar .btn { width: 100%; min-height: 52px; font-size: 1.05rem; }
+  .ex-list .dose { font-size: 0.85rem; }
 }
-@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+@media (max-width: 480px) {
+  .ex { grid-template-columns: 1fr auto; padding: 14px 12px 14px 14px; }
+  .ex-side { flex-direction: column; align-items: flex-end; gap: 6px; }
+  .ex-side .dose { white-space: normal; text-align: right; max-width: 7.5em; }
+}
+
+/* Geführtes Training */
+.trainer { position: fixed; inset: 0; z-index: 100; background: var(--bg); display: flex; flex-direction: column; }
+.tr-top {
+  background: var(--surface); border-bottom: 1px solid var(--line);
+  padding: calc(env(safe-area-inset-top, 0px) + 8px) max(12px, env(safe-area-inset-right, 0px)) 10px max(12px, env(safe-area-inset-left, 0px));
+}
+.tr-top-in { max-width: 640px; margin: 0 auto; display: flex; flex-direction: column; gap: 10px; }
+.tr-bar { display: flex; align-items: center; gap: 8px; }
+.icon-btn {
+  flex: 0 0 auto; width: 44px; height: 44px; border-radius: 8px; border: 1px solid var(--line);
+  background: var(--bg); color: var(--fg); display: inline-flex; align-items: center; justify-content: center; cursor: pointer; padding: 0;
+}
+.icon-btn svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+.icon-btn[aria-pressed="false"] { color: var(--muted); }
+.tr-meta { flex: 1; min-width: 0; display: flex; flex-direction: column; line-height: 1.2; }
+.tr-meta b { font-family: var(--font-display); font-size: 1.15rem; text-transform: uppercase; letter-spacing: 0.02em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.tr-meta span { font-size: 0.85rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+.tr-progress { display: flex; gap: 4px; }
+.tr-progress span { flex: 1; height: 6px; border-radius: 3px; background: var(--line); transition: background 0.2s; }
+.tr-progress span.passed { background: color-mix(in srgb, var(--accent) 45%, var(--line)); }
+.tr-progress span.complete { background: var(--accent); }
+.tr-progress span.current { box-shadow: 0 0 0 2px var(--accent) inset; }
+
+.tr-track {
+  flex: 1; min-height: 0; display: flex; overflow-x: auto; overflow-y: hidden;
+  scroll-snap-type: x mandatory; overscroll-behavior-x: contain; scrollbar-width: none;
+}
+.tr-track::-webkit-scrollbar { display: none; }
+.tr-card { flex: 0 0 100%; width: 100%; scroll-snap-align: start; scroll-snap-stop: always; overflow-y: auto; overscroll-behavior-y: contain; }
+.tr-inner {
+  max-width: 560px; margin: 0 auto; display: flex; flex-direction: column; gap: 16px;
+  padding: 22px max(20px, env(safe-area-inset-right, 0px)) 28px max(20px, env(safe-area-inset-left, 0px));
+}
+.tr-center { min-height: 100%; justify-content: center; }
+.tr-head { display: flex; align-items: center; gap: 14px; }
+.tr-num { font-family: var(--font-display); font-weight: 700; font-size: 3.4rem; line-height: 0.9; color: var(--accent); font-variant-numeric: tabular-nums; }
+.tr-num small { font-size: 1.3rem; color: var(--muted); font-weight: 600; }
+.tr-head-text { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.tr-title { font-size: clamp(2rem, 9vw, 2.6rem); line-height: 1; }
+.tr-title.big { font-size: clamp(2.6rem, 12vw, 3.4rem); }
+.tr-dose { align-self: flex-start; font-weight: 700; font-size: 1.15rem; font-variant-numeric: tabular-nums; background: var(--accent-soft); color: var(--accent); padding: 4px 12px; border-radius: 6px; }
+.tr-how { margin: 0; padding: 0; list-style: none; counter-reset: s; display: flex; flex-direction: column; gap: 10px; }
+.tr-how li { counter-increment: s; display: grid; grid-template-columns: 28px 1fr; gap: 10px; font-size: 1.08rem; line-height: 1.4; }
+.tr-how li::before {
+  content: counter(s); width: 28px; height: 28px; border-radius: 50%; background: var(--fg); color: var(--bg);
+  font-weight: 700; font-size: 0.9rem; display: flex; align-items: center; justify-content: center;
+}
+.tr-cue { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 12px 14px; font-size: 0.98rem; }
+.tr-cue b { display: block; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--accent); margin-bottom: 2px; }
+.tr-label { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); }
+.tr-sets-wrap { display: flex; flex-direction: column; gap: 8px; }
+.tr-sets { display: flex; flex-wrap: wrap; gap: 8px; }
+.set {
+  font: inherit; font-weight: 700; min-height: 48px; min-width: 96px; padding: 8px 14px; border-radius: 999px;
+  border: 2px solid var(--line); background: var(--surface); color: var(--fg); cursor: pointer; touch-action: manipulation;
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+}
+.set::before { content: ""; width: 16px; height: 16px; border-radius: 50%; border: 2px solid var(--muted); flex: 0 0 auto; }
+.set[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+.set[aria-pressed="true"]::before { border-color: var(--on-accent); background: var(--on-accent); box-shadow: inset 0 0 0 3px var(--accent); }
+.tr-levels { display: flex; flex-direction: column; gap: 4px; font-size: 0.92rem; color: var(--muted); border-top: 1px dashed var(--line); padding-top: 12px; }
+.tr-levels p.now { color: var(--fg); }
+.tr-levels p.now b { color: var(--accent); }
+.tr-levels .now-tag { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--accent); margin-left: 6px; }
+.tr-box { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; }
+.tr-row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.tr-row select {
+  font: inherit; font-weight: 600; min-height: 44px; padding: 6px 12px; border-radius: 8px;
+  border: 1.5px solid var(--line); background: var(--bg); color: var(--fg);
+}
+
+.timer { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
+.timer-btn {
+  position: relative; width: 150px; height: 150px; flex: 0 0 auto; border-radius: 50%; border: 0; padding: 0; cursor: pointer;
+  background: var(--surface); color: var(--fg); display: flex; flex-direction: column; align-items: center; justify-content: center; touch-action: manipulation;
+}
+.timer-btn svg { position: absolute; inset: 0; width: 100%; height: 100%; transform: rotate(-90deg); }
+.timer-btn .ring-bg { fill: none; stroke: var(--line); stroke-width: 9; }
+.timer-btn .ring { fill: none; stroke: var(--accent); stroke-width: 9; stroke-linecap: round; transition: stroke-dashoffset 0.1s linear; }
+.timer.is-rest .ring { stroke: var(--ok); }
+.timer.is-done .ring { stroke: var(--ok); }
+.timer-num { position: relative; font-family: var(--font-display); font-weight: 700; font-size: 3.2rem; line-height: 1; font-variant-numeric: tabular-nums; }
+.timer-state { position: relative; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--accent); }
+.timer.is-rest .timer-state, .timer.is-done .timer-state { color: var(--ok); }
+.timer-info { display: flex; flex-direction: column; gap: 4px; min-width: 0; flex: 1; }
+.timer-rep { font-weight: 700; font-variant-numeric: tabular-nums; }
+.timer-for { font-size: 0.92rem; color: var(--muted); }
+
+.tr-nav {
+  background: var(--surface); border-top: 1px solid var(--line);
+  padding: 10px max(12px, env(safe-area-inset-right, 0px)) calc(10px + env(safe-area-inset-bottom, 0px)) max(12px, env(safe-area-inset-left, 0px));
+}
+.tr-nav-in { max-width: 560px; margin: 0 auto; display: flex; gap: 10px; }
+.tr-nav .btn { min-height: 54px; font-size: 1.08rem; }
+.tr-nav .tr-prev { flex: 0 0 auto; padding: 8px 18px; }
+.tr-nav .tr-next { flex: 1; }
+.tr-next.ready { animation: pulse 1.6s ease-in-out infinite; }
+@keyframes pulse { 0%, 100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent) 45%, transparent); } 50% { box-shadow: 0 0 0 8px color-mix(in srgb, var(--accent) 0%, transparent); } }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+@media (max-height: 720px) {
+  .tr-inner { gap: 12px; padding-top: 14px; }
+  .tr-num { font-size: 2.6rem; }
+  .tr-title { font-size: 1.9rem; }
+  .tr-how { gap: 7px; }
+  .tr-how li { font-size: 1rem; }
+  .tr-cue { padding: 10px 12px; font-size: 0.92rem; }
+  .timer-btn { width: 116px; height: 116px; }
+  .timer-num { font-size: 2.5rem; }
+  .tr-nav .btn { min-height: 48px; }
+}
+
 @media print {
   :root {
     --bg: #ffffff; --surface: #ffffff; --fg: #111111; --muted: #444444; --line: #cccccc;
@@ -130,15 +273,15 @@ footer { font-size: 0.85rem; color: var(--muted); border-top: 1px solid var(--li
   }
   @page { size: A4; margin: 12mm; }
   body { padding: 0; font-size: 10pt; }
-  .wrap { gap: 16px; max-width: none; }
-  .no-print { display: none !important; }
-  .tracker input[type="number"] { border-color: #999; }
+  .wrap, .stack { gap: 16px; max-width: none; }
+  .no-print, .trainer, .cta-bar, .ex-go { display: none !important; }
+  tr.now td { background: none; }
   * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
 }
 </style>
 </head>
 <body>
-<main class="wrap">
+<main class="wrap" id="main">
   <header>
     <span class="eyebrow">Shin Splits innen · Sprunggelenk knickt nach innen</span>
     <h1>Schienbein Trainingsplan</h1>
@@ -149,55 +292,25 @@ footer { font-size: 0.85rem; color: var(--muted); border-top: 1px solid var(--li
       <span><b>Material</b> Stufe, kurzes Loop Band, kleiner Ball oder Handtuch</span>
     </div>
     <div class="actions no-print">
-      <button class="btn" type="button" id="print-btn">Als PDF speichern</button>
-      <a class="btn ghost" href="Schienbein_Trainingsplan.pdf" download id="pdf-link" hidden>PDF herunterladen</a>
+      <button class="btn" type="button" data-start="0">Training starten</button>
+      <button class="btn ghost" type="button" id="print-btn">Als PDF speichern</button>
     </div>
-    <p class="hint no-print">Im Druckfenster als Ziel „Als PDF speichern“ wählen.</p>
+    <p class="hint no-print">Tippe auf eine Übung für die Anleitung Schritt für Schritt. Für die PDF im Druckfenster „Als PDF speichern“ wählen.</p>
   </header>
 
-  <section class="block">
-    <div class="block-head"><span class="block-num">1</span><h2>Fuß aktivieren</h2><span class="block-time">3 min</span></div>
-    <ul class="ex-list">
-      <li class="ex"><div class="ex-body"><h3>Kurzfuß</h3><p>Barfuß stehen. Fußballen Richtung Ferse ziehen, ohne die Zehen zu krallen. Das Gewölbe hebt sich.</p></div><span class="dose">10 × 5 s je Fuß</span></li>
-      <li class="ex"><div class="ex-body"><h3>Fußspitze anziehen</h3><p>Sitzen, Band um beide Vorfüße. Ein Fuß bleibt liegen, der andere zieht die Fußspitze Richtung Schienbein.</p></div><span class="dose">15 je Seite</span></li>
-    </ul>
-  </section>
-
-  <section class="block">
-    <div class="block-head"><span class="block-num">2</span><h2>Sprunggelenk mit Band</h2><span class="block-time">4 min</span></div>
-    <ul class="ex-list">
-      <li class="ex"><div class="ex-body"><span class="tag">Wichtigste Übung</span><h3>Fuß nach innen drehen</h3><p>Sitzen, Beine gestreckt, an den Knöcheln kreuzen. Band um die Vorfüße und die Vorfüße auseinanderdrücken. Langsam zurück.</p></div><span class="dose">2 × 15</span></li>
-      <li class="ex"><div class="ex-body"><h3>Fuß nach außen drehen</h3><p>Füße nebeneinander, Band um die Vorfüße. Beide Füße nach außen drehen.</p></div><span class="dose">2 × 15</span></li>
-    </ul>
-  </section>
-
-  <section class="block">
-    <div class="block-head"><span class="block-num">3</span><h2>Wade kräftigen</h2><span class="block-time">4 min</span></div>
-    <ul class="ex-list">
-      <li class="ex"><div class="ex-body"><h3>Wadenheben gestreckt</h3><p>Auf der Stufe hoch auf die Zehen, dann 3 Sekunden langsam runter.</p></div><span class="dose">2 × 15</span></li>
-      <li class="ex"><div class="ex-body"><h3>Wadenheben gebeugt</h3><p>Knie leicht gebeugt, sonst gleich. Trainiert den tiefen Wadenmuskel.</p></div><span class="dose">2 × 15</span></li>
-      <li class="ex"><div class="ex-body"><h3>Wadenheben mit Ball</h3><p>Ball oder Handtuch zwischen die Fersen klemmen. So kippen die Sprunggelenke nicht nach innen.</p></div><span class="dose">15</span></li>
-    </ul>
-  </section>
-
-  <section class="block">
-    <div class="block-head"><span class="block-num">4</span><h2>Stabilität und Hüfte</h2><span class="block-time">4 min</span></div>
-    <ul class="ex-list">
-      <li class="ex"><div class="ex-body"><h3>Einbeinstand</h3><p>Gewölbe aktiv wie beim Kurzfuß. Das Knie zeigt nach vorne, nicht nach innen.</p></div><span class="dose">2 × 30 s je Seite</span></li>
-      <li class="ex"><div class="ex-body"><h3>Seitwärts gehen</h3><p>Band an den Knöcheln, leicht in die Knie. Kleine Schritte, Knie bleiben über den Füßen.</p></div><span class="dose">2 × 10 Schritte je Richtung</span></li>
-      <li class="ex"><div class="ex-body"><h3>Seitstütz</h3><p>Auf dem Unterarm, Körper in einer Linie. Kräftigt die Hüfte, die das Knie stabil hält.</p></div><span class="dose">30 s je Seite</span></li>
-    </ul>
-  </section>
+  <div class="stack" id="overview">
+    <noscript><p>Bitte JavaScript aktivieren, damit die Übungen angezeigt werden.</p></noscript>
+  </div>
 
   <section class="block">
     <h2>Steigerung</h2>
     <div class="table-wrap">
       <table>
         <thead><tr><th>Zeitraum</th><th>Was sich ändert</th></tr></thead>
-        <tbody>
-          <tr><td>Woche 1 bis 2</td><td>Plan wie oben beschrieben.</td></tr>
-          <tr><td>Woche 3 bis 4</td><td>Wadenheben einbeinig. Einbeinstand mit geschlossenen Augen.</td></tr>
-          <tr><td>Ab Woche 5</td><td>Stärkeres Band. Wadenheben einbeinig 3 × 15. Einbeinstand auf einem Kissen.</td></tr>
+        <tbody id="level-body">
+          <tr data-from="1" data-to="2"><td>Woche 1 bis 2</td><td>Plan wie oben beschrieben.</td></tr>
+          <tr data-from="3" data-to="4"><td>Woche 3 bis 4</td><td>Wadenheben einbeinig. Einbeinstand mit geschlossenen Augen.</td></tr>
+          <tr data-from="5" data-to="99"><td>Ab Woche 5</td><td>Stärkeres Band. Wadenheben einbeinig 3 × 15. Einbeinstand auf einem Kissen.</td></tr>
         </tbody>
       </table>
     </div>
@@ -213,7 +326,7 @@ footer { font-size: 0.85rem; color: var(--muted); border-top: 1px solid var(--li
       </table>
     </div>
     <div class="tracker-foot no-print">
-      <span>Häkchen und Schmerzwert werden nur in diesem Browser gespeichert.</span>
+      <span id="tracker-note">Häkchen und Schmerzwert werden nur in diesem Browser gespeichert.</span>
       <button class="link-btn" type="button" id="reset-btn">Protokoll leeren</button>
     </div>
   </section>
@@ -245,50 +358,171 @@ footer { font-size: 0.85rem; color: var(--muted); border-top: 1px solid var(--li
   <footer>Dieser Plan ersetzt keine ärztliche oder physiotherapeutische Untersuchung.</footer>
 </main>
 
+<div class="cta-bar no-print">
+  <button class="btn" type="button" data-start="0">Training starten · 15 min</button>
+</div>
+
+<div class="trainer" id="trainer" role="dialog" aria-modal="true" aria-label="Geführtes Training" hidden>
+  <div class="tr-top">
+    <div class="tr-top-in">
+      <div class="tr-bar">
+        <button class="icon-btn" type="button" id="tr-close" aria-label="Training beenden">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+        </button>
+        <div class="tr-meta"><b id="tr-block">Start</b><span id="tr-count">Geführtes Training</span></div>
+        <button class="icon-btn" type="button" id="tr-sound" aria-pressed="true" aria-label="Ton">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4z"/><path id="snd-on" d="M16.5 8.5a5 5 0 010 7M19 6a8.5 8.5 0 010 12"/><path id="snd-off" d="M17 9l5 6M22 9l-5 6" style="display:none"/></svg>
+        </button>
+      </div>
+      <div class="tr-progress" id="tr-progress" aria-hidden="true"></div>
+    </div>
+  </div>
+  <div class="tr-track" id="tr-track"></div>
+  <div class="tr-nav">
+    <div class="tr-nav-in">
+      <button class="btn ghost tr-prev" type="button" id="tr-prev" aria-label="Zurück">‹ Zurück</button>
+      <button class="btn tr-next" type="button" id="tr-next">Los geht's</button>
+    </div>
+  </div>
+</div>
+
 <script>
 (function () {
+  "use strict";
+
+  /* ---------- Übungsdaten ---------- */
+  var BAND5 = [{ from: 5, to: 99, text: "Stärkeres Band." }];
+  var CALF = [{ from: 3, to: 4, text: "Einbeinig." }, { from: 5, to: 99, text: "Einbeinig, 3 × 15." }];
+  var BLOCKS = [
+    { name: "Fuß aktivieren", time: "3 min", items: [
+      { name: "Kurzfuß", dose: "10 × 5 s je Fuß",
+        short: "Barfuß stehen. Fußballen Richtung Ferse ziehen, ohne die Zehen zu krallen. Das Gewölbe hebt sich.",
+        steps: ["Barfuß hinstellen, Gewicht gleichmäßig auf Ferse und Ballen.", "Den Ballen Richtung Ferse ziehen, ohne die Zehen zu krallen.", "5 Sekunden halten, dann kurz lösen."],
+        cue: "Das Fußgewölbe hebt sich, die Zehen bleiben lang.",
+        timer: { hold: 5, reps: 10, rest: 3 }, sets: ["Links", "Rechts"] },
+      { name: "Fußspitze anziehen", dose: "15 je Seite",
+        short: "Sitzen, Band um beide Vorfüße. Ein Fuß bleibt liegen, der andere zieht die Fußspitze Richtung Schienbein.",
+        steps: ["Hinsetzen, Beine gestreckt.", "Das Band um beide Vorfüße legen.", "Ein Fuß bleibt ruhig, der andere zieht die Fußspitze Richtung Schienbein.", "Langsam zurück."],
+        cue: "Die Ferse bleibt am Boden.", sets: ["Links", "Rechts"], levels: BAND5 }
+    ]},
+    { name: "Sprunggelenk mit Band", time: "4 min", items: [
+      { name: "Fuß nach innen drehen", dose: "2 × 15", tag: "Wichtigste Übung",
+        short: "Sitzen, Beine gestreckt, an den Knöcheln kreuzen. Band um die Vorfüße und die Vorfüße auseinanderdrücken. Langsam zurück.",
+        steps: ["Hinsetzen, Beine gestreckt und an den Knöcheln kreuzen.", "Das Band um beide Vorfüße legen.", "Die Vorfüße auseinanderdrücken. So dreht jeder Fuß nach innen.", "In 2 bis 3 Sekunden langsam zurück."],
+        cue: "Die Bewegung kommt aus dem Fuß. Die Beine bleiben ruhig liegen.", sets: ["Satz 1", "Satz 2"], levels: BAND5 },
+      { name: "Fuß nach außen drehen", dose: "2 × 15",
+        short: "Füße nebeneinander, Band um die Vorfüße. Beide Füße nach außen drehen.",
+        steps: ["Hinsetzen, Füße nebeneinander.", "Das Band um beide Vorfüße legen.", "Beide Füße gleichzeitig nach außen drehen.", "Langsam zurück."],
+        cue: "Die Fersen bleiben zusammen am Boden.", sets: ["Satz 1", "Satz 2"], levels: BAND5 }
+    ]},
+    { name: "Wade kräftigen", time: "4 min", items: [
+      { name: "Wadenheben gestreckt", dose: "2 × 15",
+        short: "Auf der Stufe hoch auf die Zehen, dann 3 Sekunden langsam runter.",
+        steps: ["Mit den Fußballen auf eine Stufe stellen, die Fersen hängen frei.", "Mit gestreckten Knien hoch auf die Zehen.", "In 3 Sekunden langsam absenken."],
+        cue: "Das Gewicht bleibt über dem großen Zeh. Die Knöchel kippen nicht zur Seite.", sets: ["Satz 1", "Satz 2"], levels: CALF },
+      { name: "Wadenheben gebeugt", dose: "2 × 15",
+        short: "Knie leicht gebeugt, sonst gleich. Trainiert den tiefen Wadenmuskel.",
+        steps: ["Gleiche Position auf der Stufe.", "Die Knie leicht beugen und so lassen.", "Hoch auf die Zehen, dann in 3 Sekunden runter."],
+        cue: "Trainiert den tiefen Wadenmuskel, der das Schienbein entlastet.", sets: ["Satz 1", "Satz 2"], levels: CALF },
+      { name: "Wadenheben mit Ball", dose: "15",
+        short: "Ball oder Handtuch zwischen die Fersen klemmen. So kippen die Sprunggelenke nicht nach innen.",
+        steps: ["Einen kleinen Ball oder ein gerolltes Handtuch zwischen die Fersen klemmen.", "Hoch auf die Zehen und den Ball dabei festhalten.", "Langsam absenken."],
+        cue: "So können die Sprunggelenke nicht nach innen kippen.", sets: ["Satz 1"] }
+    ]},
+    { name: "Stabilität und Hüfte", time: "4 min", items: [
+      { name: "Einbeinstand", dose: "2 × 30 s je Seite",
+        short: "Gewölbe aktiv wie beim Kurzfuß. Das Knie zeigt nach vorne, nicht nach innen.",
+        steps: ["Auf ein Bein stellen.", "Das Fußgewölbe aktiv halten wie beim Kurzfuß.", "Das Knie zeigt nach vorne, nicht nach innen."],
+        cue: "Wackeln ist erlaubt. Genau das trainiert die richtigen Muskeln.",
+        timer: { hold: 30, reps: 1, rest: 0 }, sets: ["Links 1", "Rechts 1", "Links 2", "Rechts 2"],
+        levels: [{ from: 3, to: 4, text: "Augen schließen." }, { from: 5, to: 99, text: "Auf einem Kissen stehen." }] },
+      { name: "Seitwärts gehen", dose: "2 × 10 Schritte je Richtung",
+        short: "Band an den Knöcheln, leicht in die Knie. Kleine Schritte, Knie bleiben über den Füßen.",
+        steps: ["Das Band knapp über die Knöchel legen.", "Leicht in die Knie gehen.", "10 kleine Schritte nach rechts, dann 10 nach links."],
+        cue: "Die Knie bleiben über den Füßen und fallen nicht nach innen.", sets: ["Runde 1", "Runde 2"], levels: BAND5 },
+      { name: "Seitstütz", dose: "30 s je Seite",
+        short: "Auf dem Unterarm, Körper in einer Linie. Kräftigt die Hüfte, die das Knie stabil hält.",
+        steps: ["Auf die Seite legen, der Ellbogen liegt unter der Schulter.", "Die Hüfte anheben, bis der Körper eine Linie bildet.", "Halten und ruhig weiteratmen."],
+        cue: "Kräftigt die Hüfte, die das Knie stabil hält.",
+        timer: { hold: 30, reps: 1, rest: 0 }, sets: ["Links", "Rechts"] }
+    ]}
+  ];
+
+  var EX = [];
+  BLOCKS.forEach(function (b, bi) {
+    b.items.forEach(function (x) { x.block = b.name; x.bi = bi; x.i = EX.length; EX.push(x); });
+  });
+  var N = EX.length;
+  var LAST = N + 1; // Karte 0 = Start, 1..N = Übungen, N+1 = Fertig
+
+  /* ---------- Speicher ---------- */
   var KEY = "schienbein-protokoll-v1";
+  var SOUND_KEY = "schienbein-ton";
   var WEEKS = 6;
   var DAYS = ["Mo", "Di", "Mi", "Do", "Fr", "Sa", "So"];
-  var body = document.getElementById("tracker-body");
-
-  function load() {
-    try { return JSON.parse(localStorage.getItem(KEY)) || {}; } catch (e) { return {}; }
-  }
-  function save(data) {
-    try { localStorage.setItem(KEY, JSON.stringify(data)); } catch (e) {}
-  }
-
+  function load() { try { return JSON.parse(localStorage.getItem(KEY)) || {}; } catch (e) { return {}; } }
+  function save() { try { localStorage.setItem(KEY, JSON.stringify(data)); } catch (e) {} }
   var data = load();
 
-  for (var w = 1; w <= WEEKS; w++) {
-    var tr = document.createElement("tr");
-    var th = document.createElement("td");
-    th.textContent = w;
-    tr.appendChild(th);
-    DAYS.forEach(function (d) {
-      var td = document.createElement("td");
-      var cb = document.createElement("input");
-      cb.type = "checkbox";
-      cb.id = "w" + w + "-" + d;
-      cb.setAttribute("aria-label", "Woche " + w + ", " + d);
-      cb.checked = !!data[cb.id];
-      td.appendChild(cb);
-      tr.appendChild(td);
-    });
-    var tdp = document.createElement("td");
-    var num = document.createElement("input");
-    num.type = "number"; num.min = "0"; num.max = "10"; num.inputMode = "numeric";
-    num.id = "w" + w + "-schmerz";
-    num.setAttribute("aria-label", "Schmerzwert Woche " + w);
-    if (data[num.id] !== undefined) num.value = data[num.id];
-    tdp.appendChild(num);
-    tdp.appendChild(document.createTextNode(" /10"));
-    tr.appendChild(tdp);
-    body.appendChild(tr);
+  function pad(n) { return (n < 10 ? "0" : "") + n; }
+  function iso(d) { return d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate()); }
+  function mondayOf(d) { var x = new Date(d.getFullYear(), d.getMonth(), d.getDate()); x.setDate(x.getDate() - (x.getDay() + 6) % 7); return x; }
+  function currentWeek() {
+    if (!data.start) return null;
+    var p = data.start.split("-");
+    var s = new Date(+p[0], +p[1] - 1, +p[2]);
+    var days = Math.round((mondayOf(new Date()) - s) / 86400000);
+    return Math.floor(days / 7) + 1;
   }
+  function todayKey() { return DAYS[(new Date().getDay() + 6) % 7]; }
 
-  body.addEventListener("change", function (e) {
+  /* ---------- Übersicht ---------- */
+  var overview = document.getElementById("overview");
+  overview.innerHTML = BLOCKS.map(function (b, bi) {
+    return '<section class="block"><div class="block-head"><span class="block-num">' + (bi + 1) + '</span><h2>' + b.name +
+      '</h2><span class="block-time">' + b.time + '</span></div><ul class="ex-list">' +
+      b.items.map(function (x) {
+        return '<li><a class="ex" href="#training" data-start="' + (x.i + 1) + '"><span class="ex-body">' +
+          (x.tag ? '<span class="tag">' + x.tag + '</span>' : '') +
+          '<span class="ex-title">' + x.name + '</span><span class="ex-text">' + x.short + '</span></span>' +
+          '<span class="ex-side"><span class="dose">' + x.dose + '</span><span class="ex-go" aria-hidden="true">›</span></span></a></li>';
+      }).join("") + '</ul></section>';
+  }).join("");
+
+  /* ---------- Protokoll ---------- */
+  var tbody = document.getElementById("tracker-body");
+  function renderTracker() {
+    var html = "";
+    for (var w = 1; w <= WEEKS; w++) {
+      html += '<tr data-week="' + w + '"><td>' + w + '</td>';
+      DAYS.forEach(function (d) {
+        var id = "w" + w + "-" + d;
+        html += '<td><label class="cell"><input type="checkbox" id="' + id + '" aria-label="Woche ' + w + ', ' + d + '"' + (data[id] ? " checked" : "") + '></label></td>';
+      });
+      var pid = "w" + w + "-schmerz";
+      var pv = data[pid] !== undefined ? data[pid] : "";
+      html += '<td><input type="number" min="0" max="10" inputmode="numeric" id="' + pid + '" aria-label="Schmerzwert Woche ' + w + '" value="' + pv + '"> /10</td></tr>';
+    }
+    tbody.innerHTML = html;
+    markWeek();
+  }
+  function markWeek() {
+    var wk = currentWeek();
+    tbody.querySelectorAll("tr").forEach(function (tr) { tr.classList.toggle("now", wk !== null && +tr.dataset.week === wk); });
+    document.querySelectorAll("#level-body tr").forEach(function (tr) {
+      tr.classList.toggle("now", wk !== null && wk >= +tr.dataset.from && wk <= +tr.dataset.to);
+    });
+    var note = document.getElementById("tracker-note");
+    if (data.start && wk !== null) {
+      var p = data.start.split("-");
+      note.textContent = (wk <= WEEKS ? "Du bist in Woche " + wk + ". " : "") + "Woche 1 begann am " + p[2] + "." + p[1] + "." + p[0] + ". Alles bleibt nur in diesem Browser gespeichert.";
+    } else {
+      note.textContent = "Häkchen und Schmerzwert werden nur in diesem Browser gespeichert.";
+    }
+  }
+  renderTracker();
+
+  tbody.addEventListener("change", function (e) {
     var t = e.target;
     if (t.type === "checkbox") {
       if (t.checked) data[t.id] = true; else delete data[t.id];
@@ -297,26 +531,367 @@ footer { font-size: 0.85rem; color: var(--muted); border-top: 1px solid var(--li
       if (isNaN(v)) { delete data[t.id]; t.value = ""; }
       else { v = Math.max(0, Math.min(10, v)); t.value = v; data[t.id] = v; }
     }
-    save(data);
+    save();
   });
-
   document.getElementById("reset-btn").addEventListener("click", function () {
-    if (!confirm("Alle Häkchen und Schmerzwerte löschen?")) return;
-    data = {};
-    save(data);
-    body.querySelectorAll("input").forEach(function (i) {
-      if (i.type === "checkbox") i.checked = false; else i.value = "";
-    });
+    if (!window.confirm("Alle Häkchen, Schmerzwerte und das Startdatum löschen?")) return;
+    data = {}; save(); renderTracker();
   });
-
   document.getElementById("print-btn").addEventListener("click", function () { window.print(); });
 
-  var pdf = document.getElementById("pdf-link");
-  if (location.protocol.indexOf("http") === 0 && window.fetch) {
-    fetch(pdf.getAttribute("href"), { method: "HEAD" })
-      .then(function (r) { if (r.ok) pdf.hidden = false; })
-      .catch(function () {});
+  /* ---------- Geführtes Training: Karten ---------- */
+  var trainer = document.getElementById("trainer");
+  var track = document.getElementById("tr-track");
+  var progress = document.getElementById("tr-progress");
+  var prevBtn = document.getElementById("tr-prev");
+  var nextBtn = document.getElementById("tr-next");
+  var main = document.getElementById("main");
+
+  function timerHTML(x) {
+    return '<div class="timer" data-i="' + x.i + '"><button class="timer-btn" type="button" aria-label="Timer starten oder pausieren">' +
+      '<svg viewBox="0 0 120 120" aria-hidden="true"><circle class="ring-bg" cx="60" cy="60" r="52"/><circle class="ring" cx="60" cy="60" r="52" pathLength="100" stroke-dasharray="100" stroke-dashoffset="0"/></svg>' +
+      '<span class="timer-num">' + x.timer.hold + '</span><span class="timer-state">Start</span></button>' +
+      '<div class="timer-info"><span class="timer-rep">' + (x.timer.reps > 1 ? "Wiederholung 1 von " + x.timer.reps : x.timer.hold + " Sekunden halten") + '</span>' +
+      '<span class="timer-for"></span><button class="link-btn timer-reset" type="button">Zurücksetzen</button></div></div>';
   }
+  function levelsHTML(x) {
+    if (!x.levels) return "";
+    return '<div class="tr-levels" data-i="' + x.i + '"><span class="tr-label">Steigerung</span>' + x.levels.map(function (l) {
+      return '<p data-from="' + l.from + '" data-to="' + l.to + '"><b>Ab Woche ' + l.from + '</b> ' + l.text + '</p>';
+    }).join("") + '</div>';
+  }
+  var cards = [];
+  cards.push('<article class="tr-card" aria-label="Start"><div class="tr-inner tr-center">' +
+    '<span class="eyebrow">Geführtes Training</span><h2 class="tr-title big">Bereit?</h2>' +
+    '<p class="lead">' + N + ' Übungen in ' + BLOCKS.length + ' Blöcken, etwa 15 Minuten.</p>' +
+    '<p class="tr-dose" id="tr-week-info" hidden></p>' +
+    '<div class="tr-box"><span class="tr-label">Das brauchst du</span><ul class="rules"><li>Eine Stufe</li><li>Ein kurzes Loop Band</li><li>Einen kleinen Ball oder ein Handtuch</li></ul></div>' +
+    '<p class="hint">Wische zur Seite oder tippe auf Weiter. Die Timer geben einen Ton, wenn du wechseln sollst. Der Bildschirm bleibt dabei an.</p>' +
+    '</div></article>');
+  EX.forEach(function (x) {
+    cards.push('<article class="tr-card" aria-label="Übung ' + (x.i + 1) + ' von ' + N + '"><div class="tr-inner">' +
+      '<div class="tr-head"><span class="tr-num">' + (x.i + 1) + '<small>/' + N + '</small></span><div class="tr-head-text">' +
+      '<span class="eyebrow">' + x.block + '</span>' + (x.tag ? '<span class="tag">' + x.tag + '</span>' : '') + '</div></div>' +
+      '<h2 class="tr-title">' + x.name + '</h2><span class="tr-dose">' + x.dose + '</span>' +
+      '<ol class="tr-how">' + x.steps.map(function (s) { return '<li>' + s + '</li>'; }).join("") + '</ol>' +
+      '<p class="tr-cue"><b>Achte darauf</b>' + x.cue + '</p>' +
+      (x.timer ? timerHTML(x) : '') +
+      '<div class="tr-sets-wrap"><span class="tr-label">Abhaken</span><div class="tr-sets">' +
+      x.sets.map(function (s, k) { return '<button type="button" class="set" data-i="' + x.i + '" data-k="' + k + '" aria-pressed="false">' + s + '</button>'; }).join("") +
+      '</div></div>' + levelsHTML(x) + '</div></article>');
+  });
+  var weekOpts = "";
+  for (var wo = 1; wo <= WEEKS; wo++) weekOpts += '<option value="' + wo + '">Woche ' + wo + '</option>';
+  cards.push('<article class="tr-card" aria-label="Fertig"><div class="tr-inner tr-center">' +
+    '<span class="eyebrow">Fertig</span><h2 class="tr-title big">Geschafft</h2><p class="lead" id="tr-summary"></p>' +
+    '<div class="tr-box"><label class="tr-label" for="tr-week-select">Ins Protokoll eintragen</label>' +
+    '<div class="tr-row"><select id="tr-week-select">' + weekOpts + '</select><button class="btn" type="button" id="tr-log">Heute abhaken</button></div>' +
+    '<p class="hint" id="tr-log-msg" aria-live="polite"></p></div>' +
+    '<button class="btn ghost" type="button" id="tr-done">Zur Übersicht</button></div></article>');
+  track.innerHTML = cards.join("");
+  progress.innerHTML = EX.map(function () { return "<span></span>"; }).join("");
+  var segs = progress.children;
+
+  /* Sätze */
+  var done = EX.map(function (x) { return x.sets.map(function () { return false; }); });
+  function setsComplete(i) { return done[i].every(Boolean); }
+  function refreshSets(i) {
+    track.querySelectorAll('.set[data-i="' + i + '"]').forEach(function (b) { b.setAttribute("aria-pressed", done[i][+b.dataset.k] ? "true" : "false"); });
+    var t = timers[i];
+    if (t) renderTimer(t);
+    updateChrome();
+  }
+  track.addEventListener("click", function (e) {
+    var s = e.target.closest(".set");
+    if (s) { var i = +s.dataset.i, k = +s.dataset.k; done[i][k] = !done[i][k]; refreshSets(i); return; }
+    var tb = e.target.closest(".timer-btn");
+    if (tb) { toggleTimer(timers[+tb.parentNode.dataset.i]); return; }
+    var tr = e.target.closest(".timer-reset");
+    if (tr) { resetTimer(timers[+tr.closest(".timer").dataset.i]); }
+  });
+
+  /* ---------- Ton, Vibration, Bildschirm an ---------- */
+  var soundOn = true;
+  try { soundOn = localStorage.getItem(SOUND_KEY) !== "0"; } catch (e) {}
+  var soundBtn = document.getElementById("tr-sound");
+  function renderSound() {
+    soundBtn.setAttribute("aria-pressed", soundOn ? "true" : "false");
+    soundBtn.setAttribute("aria-label", soundOn ? "Ton ist an" : "Ton ist aus");
+    document.getElementById("snd-on").style.display = soundOn ? "" : "none";
+    document.getElementById("snd-off").style.display = soundOn ? "none" : "";
+  }
+  renderSound();
+  soundBtn.addEventListener("click", function () {
+    soundOn = !soundOn; renderSound();
+    try { localStorage.setItem(SOUND_KEY, soundOn ? "1" : "0"); } catch (e) {}
+    if (soundOn) { audio(); cue("go"); }
+  });
+  var actx = null;
+  function audio() {
+    try {
+      if (!actx) actx = new (window.AudioContext || window.webkitAudioContext)();
+      if (actx.state === "suspended") actx.resume();
+    } catch (e) { actx = null; }
+    return actx;
+  }
+  function beep(freq, dur, delay) {
+    if (!soundOn || !actx) return;
+    try {
+      var t0 = actx.currentTime + (delay || 0);
+      var o = actx.createOscillator(), g = actx.createGain();
+      o.type = "sine"; o.frequency.value = freq;
+      g.gain.setValueAtTime(0.0001, t0);
+      g.gain.exponentialRampToValueAtTime(0.35, t0 + 0.01);
+      g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+      o.connect(g); g.connect(actx.destination);
+      o.start(t0); o.stop(t0 + dur + 0.05);
+    } catch (e) {}
+  }
+  function vibrate(p) { try { if (navigator.vibrate) navigator.vibrate(p); } catch (e) {} }
+  function cue(kind) {
+    if (kind === "go") { beep(880, 0.18); vibrate(120); }
+    else if (kind === "rest") { beep(523, 0.18); vibrate(80); }
+    else if (kind === "tick") { beep(660, 0.07); }
+    else if (kind === "done") { beep(880, 0.15); beep(1175, 0.3, 0.18); vibrate([200, 100, 200]); }
+  }
+  var wakeLock = null;
+  function lockScreen() {
+    try {
+      if ("wakeLock" in navigator && document.visibilityState === "visible") {
+        navigator.wakeLock.request("screen").then(function (l) { wakeLock = l; }).catch(function () {});
+      }
+    } catch (e) {}
+  }
+  function unlockScreen() { if (wakeLock) { wakeLock.release().catch(function () {}); wakeLock = null; } }
+  document.addEventListener("visibilitychange", function () { if (!trainer.hidden && document.visibilityState === "visible") lockScreen(); });
+
+  /* ---------- Timer ---------- */
+  var timers = {};
+  EX.forEach(function (x) {
+    if (!x.timer) return;
+    var el = track.querySelector('.timer[data-i="' + x.i + '"]');
+    timers[x.i] = { i: x.i, hold: x.timer.hold, reps: x.timer.reps, rest: x.timer.rest, el: el,
+      phase: "idle", rep: 1, dur: x.timer.hold * 1000, remaining: x.timer.hold * 1000, running: false, endAt: 0, lastSec: null };
+  });
+  var active = null, tickId = 0;
+  function setPhase(t, ph) {
+    t.phase = ph;
+    t.dur = (ph === "hold" ? t.hold : t.rest) * 1000;
+    t.remaining = t.dur; t.endAt = Date.now() + t.dur; t.lastSec = null;
+    cue(ph === "hold" ? "go" : "rest");
+  }
+  function toggleTimer(t) {
+    if (!t) return;
+    audio();
+    if (t.running) { pauseTimer(t); return; }
+    if (active && active !== t) pauseTimer(active);
+    if (t.phase === "idle" || t.phase === "done") { t.rep = 1; setPhase(t, "hold"); }
+    else { t.endAt = Date.now() + t.remaining; }
+    t.running = true; active = t;
+    if (!tickId) tickId = setInterval(tick, 100);
+    renderTimer(t);
+  }
+  function pauseTimer(t) {
+    if (!t || !t.running) return;
+    t.remaining = Math.max(0, t.endAt - Date.now()); t.running = false;
+    if (active === t) active = null;
+    renderTimer(t);
+  }
+  function resetTimer(t) {
+    if (!t) return;
+    t.running = false; if (active === t) active = null;
+    t.phase = "idle"; t.rep = 1; t.dur = t.hold * 1000; t.remaining = t.dur;
+    renderTimer(t);
+  }
+  function tick() {
+    var t = active;
+    if (!t || !t.running) { clearInterval(tickId); tickId = 0; return; }
+    t.remaining = t.endAt - Date.now();
+    var sec = Math.ceil(t.remaining / 1000);
+    if (t.phase === "hold" && t.dur >= 10000 && sec >= 1 && sec <= 3 && sec !== t.lastSec) { t.lastSec = sec; cue("tick"); }
+    if (t.remaining <= 0) {
+      if (t.phase === "hold") {
+        if (t.rep < t.reps) {
+          if (t.rest > 0) setPhase(t, "rest"); else { t.rep++; setPhase(t, "hold"); }
+        } else {
+          t.phase = "done"; t.running = false; t.remaining = 0; active = null;
+          cue("done");
+          var k = done[t.i].indexOf(false);
+          if (k > -1) { done[t.i][k] = true; refreshSets(t.i); }
+        }
+      } else if (t.phase === "rest") { t.rep++; setPhase(t, "hold"); }
+    }
+    renderTimer(t);
+  }
+  function renderTimer(t) {
+    var el = t.el;
+    var rem = Math.max(0, t.remaining);
+    var num = t.phase === "idle" ? t.hold : Math.ceil(rem / 1000);
+    var state = "Start";
+    if (t.phase === "done") state = "Fertig";
+    else if (t.phase !== "idle" && !t.running) state = "Pause";
+    else if (t.phase === "hold") state = "Halten";
+    else if (t.phase === "rest") state = "Lösen";
+    el.querySelector(".timer-num").textContent = t.phase === "done" ? "✓" : num;
+    el.querySelector(".timer-state").textContent = state;
+    var frac = t.phase === "idle" ? 0 : t.phase === "done" ? 1 : 1 - rem / t.dur;
+    el.querySelector(".ring").setAttribute("stroke-dashoffset", (100 * frac).toFixed(2));
+    el.classList.toggle("is-rest", t.phase === "rest");
+    el.classList.toggle("is-done", t.phase === "done");
+    el.querySelector(".timer-rep").textContent = t.reps > 1 ? "Wiederholung " + t.rep + " von " + t.reps : t.hold + " Sekunden halten";
+    var x = EX[t.i], k = done[t.i].indexOf(false);
+    el.querySelector(".timer-for").textContent = k > -1 ? "Danach wird „" + x.sets[k] + "“ abgehakt." : "Alle Seiten erledigt.";
+  }
+  Object.keys(timers).forEach(function (k) { renderTimer(timers[k]); });
+
+  /* ---------- Navigation ---------- */
+  var cur = 0, lockUntil = 0, lockTarget = -1, raf = 0, syncT = 0, pushed = false, opener = null;
+  var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  function updateChrome() {
+    var ex = cur - 1;
+    for (var k = 0; k < N; k++) {
+      segs[k].className = (setsComplete(k) ? "complete" : k < ex ? "passed" : "") + (k === ex ? " current" : "");
+    }
+    var blockEl = document.getElementById("tr-block"), countEl = document.getElementById("tr-count");
+    if (cur === 0) { blockEl.textContent = "Start"; countEl.textContent = N + " Übungen · ca. 15 min"; }
+    else if (cur === LAST) { blockEl.textContent = "Fertig"; countEl.textContent = "Gut gemacht"; }
+    else { blockEl.textContent = EX[ex].block; countEl.textContent = "Übung " + cur + " von " + N; }
+    prevBtn.disabled = cur === 0;
+    nextBtn.textContent = cur === 0 ? "Los geht's" : cur === N ? "Abschließen" : cur === LAST ? "Schließen" : "Weiter";
+    nextBtn.classList.toggle("ready", cur > 0 && cur <= N && setsComplete(ex));
+    if (cur === LAST) renderSummary();
+  }
+  function setCurrent(i) {
+    cur = i;
+    if (active && active.i !== cur - 1) pauseTimer(active);
+    updateChrome();
+  }
+  function goTo(i, smooth) {
+    i = Math.max(0, Math.min(LAST, i));
+    setCurrent(i);
+    lockTarget = i; lockUntil = Date.now() + 700;
+    track.scrollTo({ left: i * track.clientWidth, behavior: smooth && !reduce ? "smooth" : "auto" });
+    clearTimeout(syncT);
+    syncT = setTimeout(function () { lockUntil = 0; syncFromScroll(); }, 900);
+  }
+  function syncFromScroll() {
+    if (trainer.hidden || !track.clientWidth || Date.now() < lockUntil) return;
+    var i = Math.round(track.scrollLeft / track.clientWidth);
+    if (i !== cur) setCurrent(i);
+  }
+  track.addEventListener("scroll", function () {
+    if (raf) return;
+    raf = requestAnimationFrame(function () {
+      raf = 0;
+      if (Date.now() < lockUntil) {
+        if (Math.abs(track.scrollLeft - lockTarget * track.clientWidth) < 2) lockUntil = 0;
+        return;
+      }
+      syncFromScroll();
+    });
+  }, { passive: true });
+  window.addEventListener("resize", function () {
+    if (!trainer.hidden) track.scrollTo({ left: cur * track.clientWidth, behavior: "auto" });
+  });
+
+  prevBtn.addEventListener("click", function () { goTo(cur - 1, true); });
+  nextBtn.addEventListener("click", function () {
+    if (cur === 0) audio();
+    if (cur === LAST) { requestClose(); return; }
+    goTo(cur + 1, true);
+  });
+  document.addEventListener("keydown", function (e) {
+    if (trainer.hidden) return;
+    var tag = (e.target.tagName || "").toLowerCase();
+    if (tag === "select" || tag === "input") return;
+    if (e.key === "ArrowRight") { e.preventDefault(); goTo(cur + 1, true); }
+    else if (e.key === "ArrowLeft") { e.preventDefault(); goTo(cur - 1, true); }
+    else if (e.key === "Escape") { e.preventDefault(); requestClose(); }
+  });
+
+  function weekInfo() {
+    var wk = currentWeek(), info = document.getElementById("tr-week-info");
+    if (wk !== null && wk >= 1 && wk <= WEEKS) { info.textContent = "Du bist in Woche " + wk; info.hidden = false; }
+    else info.hidden = true;
+    track.querySelectorAll(".tr-levels p").forEach(function (p) {
+      var on = wk !== null && wk >= +p.dataset.from && wk <= +p.dataset.to;
+      p.classList.toggle("now", on);
+      var tag = p.querySelector(".now-tag");
+      if (on && !tag) p.insertAdjacentHTML("beforeend", '<span class="now-tag">Jetzt dran</span>');
+      if (!on && tag) tag.remove();
+    });
+  }
+
+  function openTrainer(idx, push) {
+    opener = document.activeElement;
+    trainer.hidden = false;
+    document.documentElement.classList.add("tr-open");
+    if ("inert" in main) main.inert = true;
+    if (push) { history.pushState({ tr: 1 }, "", "#training"); pushed = true; }
+    weekInfo();
+    lockScreen();
+    requestAnimationFrame(function () { goTo(idx, false); document.getElementById("tr-close").focus({ preventScroll: true }); });
+  }
+  function hideTrainer() {
+    if (trainer.hidden) return;
+    if (active) pauseTimer(active);
+    unlockScreen();
+    trainer.hidden = true;
+    document.documentElement.classList.remove("tr-open");
+    if ("inert" in main) main.inert = false;
+    if (opener && opener.focus) opener.focus({ preventScroll: true });
+  }
+  function requestClose() {
+    if (pushed) { history.back(); }
+    else { hideTrainer(); history.replaceState(null, "", location.pathname + location.search); }
+  }
+  window.addEventListener("popstate", function () {
+    if (location.hash === "#training") { if (trainer.hidden) { pushed = true; openTrainer(cur || 0, false); } }
+    else { pushed = false; hideTrainer(); }
+  });
+  document.getElementById("tr-close").addEventListener("click", requestClose);
+  document.addEventListener("click", function (e) {
+    var s = e.target.closest("[data-start]");
+    if (!s || trainer.contains(s)) return;
+    e.preventDefault();
+    openTrainer(+s.dataset.start, true);
+  });
+
+  /* ---------- Abschluss ---------- */
+  function renderSummary() {
+    var total = 0, ok = 0;
+    done.forEach(function (a) { a.forEach(function (v) { total++; if (v) ok++; }); });
+    document.getElementById("tr-summary").textContent = ok === total
+      ? "Alle " + total + " Sätze erledigt."
+      : ok + " von " + total + " Sätzen abgehakt. Fehlende Sätze kannst du nachholen, indem du zurückwischst.";
+    var sel = document.getElementById("tr-week-select");
+    var wk = currentWeek();
+    if (wk === null) {
+      wk = 1;
+      for (var w = WEEKS; w >= 1; w--) { if (DAYS.some(function (d) { return data["w" + w + "-" + d]; })) { wk = w; break; } }
+    }
+    sel.value = String(Math.max(1, Math.min(WEEKS, wk)));
+  }
+  document.getElementById("tr-log").addEventListener("click", function () {
+    var w = +document.getElementById("tr-week-select").value;
+    var d = todayKey(), id = "w" + w + "-" + d;
+    var start = mondayOf(new Date()); start.setDate(start.getDate() - (w - 1) * 7);
+    data.start = iso(start);
+    data[id] = true; save();
+    var cb = document.getElementById(id); if (cb) cb.checked = true;
+    markWeek(); weekInfo();
+    document.getElementById("tr-log-msg").textContent = "Eingetragen: Woche " + w + ", " + d + ".";
+  });
+  document.getElementById("tr-done").addEventListener("click", function () {
+    done = EX.map(function (x) { return x.sets.map(function () { return false; }); });
+    EX.forEach(function (x) { refreshSets(x.i); if (timers[x.i]) resetTimer(timers[x.i]); });
+    document.getElementById("tr-log-msg").textContent = "";
+    cur = 0;
+    requestClose();
+  });
+
+  if (location.hash === "#training") openTrainer(0, false);
 })();
 </script>
 </body>
